@@ -82,7 +82,8 @@ public class ZoneGenerator : MonoBehaviour
             zoneLetter.text = zones[zoneIndex].zone.ToString();
 
             ClearTerrain();
-            SpawnTrees(treeCount);
+            //SpawnTrees(treeCount);
+            StartCoroutine(GetComponent<ApiCall>().GetTreesPerZone(zones[zoneIndex].zone.ToString()));
             SpawnPlants(plantCount);
         }
 
