@@ -19,7 +19,9 @@ public class ZoneGenerator : MonoBehaviour
 
     //current zone
     int zoneIndex = 0;
-    
+    int treeCount;
+    int plantCount;
+
     private void Start()
     {
         // Get the length and width of the plane
@@ -28,9 +30,13 @@ public class ZoneGenerator : MonoBehaviour
         xDim /= 2f;
         zDim /= 2f;
 
+        treeCount = zones[zoneIndex].treeCount;
+        plantCount = zones[zoneIndex].plantCount;
+
         ClearTerrain();
-        SpawnTrees();
-        SpawnPlants();
+        SpawnTrees(treeCount);
+        SpawnPlants(plantCount);
+        SetInput();
     }
 
     private void Update()
@@ -43,6 +49,8 @@ public class ZoneGenerator : MonoBehaviour
                 zones[zoneIndex].landMark.SetActive(false);
             }
 
+            SetInput();
+
             zoneIndex++;
             if(zoneIndex > 25)
             {
@@ -52,8 +60,8 @@ public class ZoneGenerator : MonoBehaviour
             zoneLetter.text = zones[zoneIndex].zone.ToString();
 
             ClearTerrain();
-            SpawnTrees();
-            SpawnPlants();
+            SpawnTrees(treeCount);
+            SpawnPlants(plantCount);
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -62,6 +70,9 @@ public class ZoneGenerator : MonoBehaviour
             {
                 zones[zoneIndex].landMark.SetActive(false);
             }
+
+            SetInput();
+
             zoneIndex--;
             if (zoneIndex < 0)
             {
@@ -71,9 +82,23 @@ public class ZoneGenerator : MonoBehaviour
             zoneLetter.text = zones[zoneIndex].zone.ToString();
 
             ClearTerrain();
-            SpawnTrees();
-            SpawnPlants();
+            SpawnTrees(treeCount);
+            SpawnPlants(plantCount);
         }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            int treeCount = int.Parse(treeInput.text.ToString());
+            int plantCount = int.Parse(treeInput.text.ToString());
+
+            Debug.Log(treeCount);
+
+            ClearTerrain();
+            SpawnTrees(treeCount);
+            SpawnPlants(plantCount);
+
+        }
+
     }
 
     public void ClearTerrain()
@@ -90,10 +115,10 @@ public class ZoneGenerator : MonoBehaviour
         }
     }
 
-    public void SpawnTrees()
+    public void SpawnTrees(int treeAmmount)
     {
 
-        for (int i = 0; i < zones[zoneIndex].treeCount; i++)
+        for (int i = 0; i < treeAmmount; i++)
         {
             // Spawn the object as a child of the plane. This will solve any rotation issues
             GameObject obj = Instantiate(zones[zoneIndex].trees[UnityEngine.Random.Range(0, zones[zoneIndex].trees.Length)], Vector3.zero,
@@ -116,9 +141,9 @@ public class ZoneGenerator : MonoBehaviour
 
     }
 
-    public void SpawnPlants()
+    public void SpawnPlants(int plantAmmount)
     {
-        for (int i = 0; i < zones[zoneIndex].plantCount; i++)
+        for (int i = 0; i < plantAmmount; i++)
         {
             // Spawn the object as a child of the plane. This will solve any rotation issues
             GameObject obj = Instantiate(zones[zoneIndex].plants[UnityEngine.Random.Range(0, zones[zoneIndex].plants.Length)], Vector3.zero,
@@ -142,7 +167,8 @@ public class ZoneGenerator : MonoBehaviour
 
     public void SetInput()
     {
-        
+        treeInput.text = zones[zoneIndex].treeCount.ToString();
+        plantInput.text = zones[zoneIndex].plantCount.ToString();
     }
 
 }
